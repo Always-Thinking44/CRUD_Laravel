@@ -1,50 +1,96 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Students')
+@section('title', 'Editar Estudante')
+
 @section('content')
 
+{{-- Page header --}}
+<div class="page-header">
+    <div>
+        <a href="{{ route('students.index') }}" class="btn-secondary-custom" style="margin-bottom:0.75rem;display:inline-flex">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <h1 class="page-title" style="margin:0">
+            <i class="bi bi-pencil-square"></i> Editar Estudante
+        </h1>
+    </div>
+</div>
 
-<div class="container mt-4">
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="app-card" style="padding:0">
 
-    <div class="row">
-        <div class="col-md-6 offset-3">
-             <h2 class="text-white">Update Student</h2>
-            <a href="{{ route('students.index') }}" class="btn btn-outline-warning my-4">Back</a>
-
-            <div class="card bg-dark text-white mt4">
-                <div class="card-body border border-light rounded">
-                    <form action="{{ route('students.update', $student->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="mb-3">
-                            <label class="form-label">Name</label>
-                            <input type="text" name="name" class="form-control bg-dark text-white @error('name') is-invalid @enderror" value="{{ old('name', $student->name) }}">
-                            @error('name')
-                            <div class="invalid-feedback">{{$message}}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control bg-dark text-white  @error('email') is-invalid @enderror" value="{{ old('email', $student->email) }}" >
-                            @error('email')
-                            <div class="invalid-feedback">{{$message}}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Phone</label>
-                            <input type="number"  name="phone" class="form-control bg-dark text-white @error('phone') is-invalid @enderror" value="{{ old('phone', $student->phone) }}" >
-                            @error('phone')
-                            <div class="invalid-feedback">{{$message}}</div>
-                            @enderror
-                        </div>
-
-                        <button class="btn btn-outline-success text-white" type="submit">Update</button>
-
-                    </form>
+            {{-- Card header with avatar --}}
+            <div style="padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:1rem">
+                <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <i class="bi bi-person-fill" style="color:#fff;font-size:1.3rem"></i>
+                </div>
+                <div>
+                    <p style="font-weight:600;font-size:1rem;margin:0">{{ $student->name }}</p>
+                    <p style="font-size:0.8rem;color:var(--text-muted);margin:0">ID #{{ $student->id }}</p>
                 </div>
             </div>
+
+            {{-- Form --}}
+            <form action="{{ route('students.update', $student->id) }}" method="POST" style="padding:1.5rem">
+                @csrf
+                @method('PUT')
+
+                @if ($errors->any())
+                <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:0.75rem 1rem;margin-bottom:1.25rem;font-size:0.85rem;color:var(--accent-red)">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    Por favor corrija os erros abaixo.
+                </div>
+                @endif
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bi bi-person me-1"></i>Nome
+                    </label>
+                    <input type="text" name="name"
+                        class="form-control @error('name') is-invalid @enderror"
+                        value="{{ old('name', $student->name) }}"
+                        placeholder="Nome completo">
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bi bi-envelope me-1"></i>Email
+                    </label>
+                    <input type="email" name="email"
+                        class="form-control @error('email') is-invalid @enderror"
+                        value="{{ old('email', $student->email) }}"
+                        placeholder="email@exemplo.com">
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="bi bi-telephone me-1"></i>Telefone
+                    </label>
+                    <input type="number" name="phone"
+                        class="form-control @error('phone') is-invalid @enderror"
+                        value="{{ old('phone', $student->phone) }}"
+                        placeholder="9XXXXXXXX">
+                    @error('phone')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div style="display:flex;gap:0.75rem">
+                    <a href="{{ route('students.index') }}" class="btn-secondary-custom" style="flex:1;justify-content:center">
+                        <i class="bi bi-x"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn-primary-custom" style="flex:1;justify-content:center">
+                        <i class="bi bi-floppy"></i> Guardar Alterações
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
