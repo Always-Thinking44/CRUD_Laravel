@@ -16,18 +16,31 @@ class StudentsController extends Controller
     public function create(){
         return view('students.create');
     }
-    public function store(Request $request){
-        $request->validate([
+    public function store(Request $request)
+{
+    $validated = $request->validate([
         'name' => 'required|string|min:2|max:255',
         'email'=> 'required|email|unique:students,email',
         'phone'=> 'required|digits:9|unique:students,phone',
-        ]);
+        'image'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+    ]);
 
-        //dd('ok');
-        //Create Student
-        Student::create($request->all());
-        return redirect()->route('students.index')->with('success', 'Student added sucessfully');
+    if ($request->hasFile('image')) {
+
+        $path = $request->file('image')->store(
+            'students',
+            'public'
+        );
+
+        $validated['image'] = $path;
     }
+
+    Student::create($validated);
+
+    return redirect()
+            ->route('students.index')
+            ->with('success','Student added successfully');
+}
 
     public function show(Student $student){
         //$student = Student::findOrFail($id);

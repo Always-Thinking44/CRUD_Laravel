@@ -38,6 +38,14 @@
             @forelse ($students as $student)
             <tr>
                 <td><span class="id-badge">{{ $student->id }}</span></td>
+                <td>
+                    @if($student->image)
+                        <img src="{{ asset('storage/'.$student->image) }}"
+                            width="50"
+                            height="50"
+                            style="border-radius:50%; object-fit:cover;">
+                    @endif
+                </td>
                 <td style="font-weight:500">{{ $student->name }}</td>
                 <td style="color:var(--text-muted)">{{ $student->email }}</td>
                 <td style="color:var(--text-muted)">{{ $student->phone }}</td>
@@ -94,9 +102,8 @@
 </div>
 
 
-{{-- =========================================================== --}}
+
 {{-- MODAL: CREATE STUDENT --}}
-{{-- =========================================================== --}}
 <div class="modal fade" id="createStudentModal" tabindex="-1" aria-labelledby="createStudentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -112,7 +119,7 @@
                 </button>
             </div>
 
-            <form action="{{ route('students.store') }}" method="POST" id="createForm">
+            <form action="{{ route('students.store') }}" method="POST" id="createForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     @if ($errors->any() && old('_form') === 'create')
@@ -123,6 +130,13 @@
                     @endif
 
                     <input type="hidden" name="_form" value="create">
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-person-circle me-1"></i>Image
+                        </label>
+                        <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                    </div>
 
                     <div class="mb-3">
                         <label class="form-label">
