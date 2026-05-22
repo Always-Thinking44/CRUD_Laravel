@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class StudentsController extends Controller
 {
@@ -13,9 +14,7 @@ class StudentsController extends Controller
         $students = Student::orderBy('created_at', 'desc')->paginate(7);
         return view('students.index', compact('students'));
     }
-    public function create(){
-        return view('students.create');
-    }
+
     public function store(Request $request)
 {
     $validated = $request->validate([
@@ -52,25 +51,39 @@ class StudentsController extends Controller
         return view('students.edit', compact('student'));
     }
 
-    public function update(Request $request, Student $student){
-        //validate data
-        $request->validate([
+    public function update(Request $request, Student $student)
+{
+    // CORREÇÃO: Adicionado o "$validated =" antes de $request->validate
+    $validated = $request->validate([
         'name' => 'required|string|min:2|max:255',
-        'email'=> ['required',
-                    'email',
-                    Rule::unique('students', 'email')->ignore($student->id)
+        'email'=> [
+            'required',
+            'email',
+            Rule::unique('students', 'email')->ignore($student->id)
+        ],
+        'phone'=> [
+            'required',
+            'digits:9',
+            Rule::unique('students', 'phone')->ignore($student->id)
+        ],
+        'image'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+    ]);
 
-                ],
-        'phone'=> ['required',
-                    'digits:9',
-                    Rule::unique('students', 'phone')->ignore($student->id)
-                ],
-        ]);
+    if ($request->hasFile('image')) {
+        // OPCIONAL (Boa prática): Deleta a imagem antiga do servidor para não acumular lixo
+        if ($student->image) {
+            Storage::disk('public')->delete($student->image);
+        }
 
-        $student->update($request->all());
-        return redirect()->route('students.index')->with('success', 'Student updated sucessfully');
-
+        $path = $request->file('image')->store('students', 'public');
+        $validated['image'] = $path;
     }
+
+    // Agora sim a variável $validated existe e está segura!
+    $student->update($validated);
+
+    return redirect()->route('students.index')->with('success', 'Student updated successfully');
+}
 
     public function destroy(Student $student){
         $student->delete();

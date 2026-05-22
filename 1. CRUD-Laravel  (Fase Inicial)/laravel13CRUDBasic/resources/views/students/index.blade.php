@@ -28,6 +28,7 @@
         <thead>
             <tr>
                 <th>#</th>
+                <th>Imagem</th>
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Telefone</th>
@@ -192,9 +193,7 @@
 </div>
 
 
-{{-- =========================================================== --}}
-{{-- MODAL: VIEW STUDENT DETAILS --}}
-{{-- =========================================================== --}}
+{{--  MODAL: VIEW STUDENT DETAILS  --}}
 <div class="modal fade" id="viewStudentModal" tabindex="-1" aria-labelledby="viewStudentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -263,9 +262,8 @@
 </div>
 
 
-{{-- =========================================================== --}}
 {{-- MODAL: DELETE CONFIRM --}}
-{{-- =========================================================== --}}
+
 <div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">

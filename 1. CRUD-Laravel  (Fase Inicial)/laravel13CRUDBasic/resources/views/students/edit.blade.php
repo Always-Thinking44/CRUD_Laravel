@@ -21,18 +21,14 @@
         <div class="app-card" style="padding:0">
 
             {{-- Card header with avatar --}}
-            <div style="padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:1rem">
-                <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <i class="bi bi-person-fill" style="color:#fff;font-size:1.3rem"></i>
-                </div>
-                <div>
-                    <p style="font-weight:600;font-size:1rem;margin:0">{{ $student->name }}</p>
-                    <p style="font-size:0.8rem;color:var(--text-muted);margin:0">ID #{{ $student->id }}</p>
-                </div>
+            <div style="padding:1rem 1rem 1rem;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:center;">
+
+                <img style="width:60px;height:60px;border-radius:50%" src="{{ asset('storage/'.$student->image) }}" alt="">
+
             </div>
 
             {{-- Form --}}
-            <form action="{{ route('students.update', $student->id) }}" method="POST" style="padding:1.5rem">
+            <form action="{{ route('students.update', $student->id) }}" method="POST" style="padding:1.5rem" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -78,6 +74,16 @@
                         value="{{ old('phone', $student->phone) }}"
                         placeholder="9XXXXXXXX">
                     @error('phone')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                 <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bi bi-person-circle me-1"></i>Image
+                    </label>
+                    <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                    @error('image')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
