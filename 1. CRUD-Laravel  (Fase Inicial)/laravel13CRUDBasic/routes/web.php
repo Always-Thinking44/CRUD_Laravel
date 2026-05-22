@@ -18,11 +18,9 @@ Route::get('/students', [StudentsController::class, 'index'])
     ->name('students.index');
 
 //route to display the form for creating a sutdent
-Route::get('/students/create', [StudentsController::class, 'create'])
-    ->name('students.create');
+
 //route to store a student in the table
-Route::post('/students', [StudentsController::class, 'store'])
-    ->name('students.store');
+Route::post('/students', [StudentsController::class, 'store'])->name('students.store');
 
 //Show details of a specific student by ID
 Route::get('/students/{student}', [StudentsController::class, 'show'])->name('students.show');
