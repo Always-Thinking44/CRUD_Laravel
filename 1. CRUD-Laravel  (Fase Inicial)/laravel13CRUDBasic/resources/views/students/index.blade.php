@@ -12,6 +12,12 @@
     <button class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#createStudentModal">
         <i class="bi bi-plus-lg"></i> Adicionar Estudante
     </button>
+
+    <a href="{{ route('turmas.index') }}"
+   class="btn btn-primary">
+    <i class="bi bi-book"></i>
+    Turmas
+</a>
 </div>
 
 {{-- Success alert --}}
@@ -165,7 +171,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-1">
+                    <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-telephone me-1"></i>Telefone
                         </label>
@@ -176,6 +182,16 @@
                         @error('phone')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+
+                    <div class="mb-1">
+                        <select name="turma_id">
+                            @foreach($turmas as $turma)
+                                <option value="{{ $turma->id }}">
+                                    {{ $turma->nome }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 

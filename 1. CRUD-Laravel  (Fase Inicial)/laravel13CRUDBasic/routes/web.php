@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentsController;
-
+use App\Http\Controllers\TurmaController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -32,3 +32,14 @@ Route::put('/students/{student}', [StudentsController::class, 'update'])->name('
 Route::delete('/students/{student}', [StudentsController::class, 'destroy'])->name('students.destroy');
 
 
+Route::get('/turmas', [TurmaController::class, 'index'])
+    ->name('turmas.index');
+
+Route::post('/turmas', [TurmaController::class, 'store'])
+    ->name('turmas.store');
+
+Route::put('/turmas/{turma}', [TurmaController::class, 'update'])
+    ->name('turmas.update');
+
+Route::delete('/turmas/{turma}', [TurmaController::class, 'destroy'])
+    ->name('turmas.destroy');

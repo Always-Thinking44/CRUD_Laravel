@@ -6,13 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Turma;
 
 class StudentsController extends Controller
 {
     //
     public function index(){
         $students = Student::orderBy('created_at', 'desc')->paginate(7);
-        return view('students.index', compact('students'));
+        $turmas = Turma::all();
+        return view('students.index', compact(
+        'students',
+        'turmas'
+    ));
     }
 
     public function store(Request $request)
@@ -21,7 +26,8 @@ class StudentsController extends Controller
         'name' => 'required|string|min:2|max:255',
         'email'=> 'required|email|unique:students,email',
         'phone'=> 'required|digits:9|unique:students,phone',
-        'image'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        'image'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'turma_id' => 'required|exists:turmas,id'
     ]);
 
     if ($request->hasFile('image')) {
@@ -47,9 +53,10 @@ class StudentsController extends Controller
         return view('students.show', compact('student'));
     }
 
-    public function edit(Student $student){
-        return view('students.edit', compact('student'));
-    }
+    public function edit(Student $student) {
+    $turmas = Turma::orderBy('nome')->get();
+    return view('students.edit', compact('student', 'turmas'));
+}
 
     public function update(Request $request, Student $student)
 {
@@ -66,7 +73,8 @@ class StudentsController extends Controller
             'digits:9',
             Rule::unique('students', 'phone')->ignore($student->id)
         ],
-        'image'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        'image'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'turma_id' => 'required|exists:turmas,id'
     ]);
 
     if ($request->hasFile('image')) {
@@ -79,7 +87,7 @@ class StudentsController extends Controller
         $validated['image'] = $path;
     }
 
-    // Agora sim a variável $validated existe e está segura!
+
     $student->update($validated);
 
     return redirect()->route('students.index')->with('success', 'Student updated successfully');
