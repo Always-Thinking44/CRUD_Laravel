@@ -289,7 +289,7 @@
 <div class="t-page">
 
     <div class="t-header">
-        <h2 class="t-title">Cursos</h2>
+        <h2 class="t-title">Turmas</h2>
 
         <button
             class="t-btn-primary"
@@ -297,7 +297,7 @@
             data-bs-target="#modalCreate">
             {{-- plus icon --}}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Novo Curso
+            Nova Turma
         </button>
     </div>
 
@@ -353,7 +353,7 @@
                 @csrf
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Novo Curso</h5>
+                    <h5 class="modal-title">Nova Turmas</h5>
                 </div>
 
                 <div class="modal-body">
