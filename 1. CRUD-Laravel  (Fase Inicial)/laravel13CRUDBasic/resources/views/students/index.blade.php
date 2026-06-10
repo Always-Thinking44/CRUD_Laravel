@@ -402,9 +402,21 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
                             {{-- Edit --}}
-                            <a href="{{ route('students.edit', $student->id) }}" class="ra ra-edit" title="Editar">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                            </a>
+                           <button class="ra ra-edit edit-btn"
+                                title="Editar"
+                                data-id="{{ $student->id }}"
+                                data-name="{{ $student->name }}"
+                                data-email="{{ $student->email }}"
+                                data-phone="{{ $student->phone }}"
+                                data-turma="{{ $student->turma_id }}">
+
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+
+                            </button>
                             {{-- Delete --}}
                             <button class="ra ra-del delete-btn"
                                 title="Eliminar"
@@ -629,6 +641,100 @@
     </div>
 </div>
 
+
+
+{{-- ══════════════════════════════════════════════════════════ --}}
+{{-- MODAL: EDIT CONFIRM                                      --}}
+{{-- ══════════════════════════════════════════════════════════ --}}
+<div class="modal fade" id="editStudentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Estudante</h5>
+
+                <button type="button"
+                        class="m-close"
+                        data-bs-dismiss="modal">
+                    ✕
+                </button>
+            </div>
+
+            <form id="editForm" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="m-label">Nome</label>
+                        <input type="text"
+                               name="name"
+                               id="editName"
+                               class="m-input">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="m-label">Email</label>
+                        <input type="email"
+                               name="email"
+                               id="editEmail"
+                               class="m-input">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="m-label">Telefone</label>
+                        <input type="text"
+                               name="phone"
+                               id="editPhone"
+                               class="m-input">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="m-label">Turma</label>
+
+                        <select name="turma_id"
+                                id="editTurma"
+                                class="m-select">
+
+                            @foreach($turmas as $turma)
+                                <option value="{{ $turma->id }}">
+                                    {{ $turma->nome }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="m-label">Nova Foto</label>
+                        <input type="file"
+                               name="image"
+                               class="m-input" accept="image/*">
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn-cancel"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="btn-save">
+                        Atualizar
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -665,6 +771,39 @@ document.addEventListener('DOMContentLoaded', function () {
     @if ($errors->any() && old('_form') === 'create')
         new bootstrap.Modal(document.getElementById('createStudentModal')).show();
     @endif
+});
+
+
+// ── Edit modal ──────────────────────────
+
+const editBtns = document.querySelectorAll('.edit-btn');
+const editForm = document.getElementById('editForm');
+
+editBtns.forEach(btn => {
+
+    btn.addEventListener('click', function () {
+
+        document.getElementById('editName').value =
+            this.dataset.name;
+
+        document.getElementById('editEmail').value =
+            this.dataset.email;
+
+        document.getElementById('editPhone').value =
+            this.dataset.phone;
+
+        document.getElementById('editTurma').value =
+            this.dataset.turma;
+
+        editForm.action =
+            '/students/' + this.dataset.id;
+
+        new bootstrap.Modal(
+            document.getElementById('editStudentModal')
+        ).show();
+
+    });
+
 });
 </script>
 @endsection
