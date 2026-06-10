@@ -365,6 +365,7 @@
                     <th style="width:52px">Foto</th>
                     <th>Nome</th>
                     <th>Email</th>
+                    <th>Turma</th>
                     <th>Telefone</th>
                     <th style="text-align:right">Ações</th>
                 </tr>
@@ -386,6 +387,7 @@
                     </td>
                     <td class="s-name">{{ $student->name }}</td>
                     <td class="s-sub">{{ $student->email }}</td>
+                    <td class="s-sub">{{ $student->turma->nome }}</td>
                     <td class="s-sub">{{ $student->phone }}</td>
                     <td>
                         <div class="row-actions">
