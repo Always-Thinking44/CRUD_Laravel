@@ -17,7 +17,17 @@ Route::get('/home', function () {
 Route::get('/students', [StudentsController::class, 'index'])
     ->name('students.index');
 
-//route to display the form for creating a sutdent
+
+Route::prefix('students')->name('students.')->group(function () {
+    // Rota para visualizar a lixeira
+    Route::get('/trash', [StudentsController::class, 'trash'])->name('trash');
+
+    // Rota para restaurar o estudante (usa PATCH porque altera um estado existente)
+    Route::patch('/{id}/restore', [StudentsController::class, 'restore'])->name('restore');
+
+    // Rota para eliminar permanentemente (deletar de vez do banco de dados)
+    Route::delete('/{id}/force-delete', [StudentsController::class, 'forceDelete'])->name('force-delete');
+});
 
 //route to store a student in the table
 Route::post('/students', [StudentsController::class, 'store'])->name('students.store');
@@ -30,6 +40,9 @@ Route::get('/students/{student}/edit', [StudentsController::class, 'edit'])->nam
 Route::put('/students/{student}', [StudentsController::class, 'update'])->name('students.update');
 
 Route::delete('/students/{student}', [StudentsController::class, 'destroy'])->name('students.destroy');
+
+// Sua rota resource padrão (mantenha-a como já está)
+Route::resource('students', StudentsController::class);
 
 
 Route::get('/turmas', [TurmaController::class, 'index'])

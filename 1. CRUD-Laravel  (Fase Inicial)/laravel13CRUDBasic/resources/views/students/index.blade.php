@@ -341,6 +341,11 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                 Turmas
             </a>
+            {{-- NOVO BOTÃO DA LIXEIRA --}}
+            <a href="{{ route('students.trash') }}" class="btn-outline" style="color: var(--red); border-color: var(--red-bdr);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+            Lixeira
+        </a>
             <button class="btn-ink" data-bs-toggle="modal" data-bs-target="#createStudentModal">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Adicionar Estudante
@@ -643,9 +648,9 @@
                 <div class="del-icon-wrap">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                 </div>
-                <h5 style="font-family:'Lora',serif;font-weight:600;font-size:1rem;margin-bottom:0.4rem">Eliminar Estudante?</h5>
+                <h5 style="font-family:'Lora',serif;font-weight:600;font-size:1rem;margin-bottom:0.4rem">Enviar para a Lixeira?</h5>
                 <p style="color:var(--ink-muted);font-size:0.85rem;margin:0">
-                    Vai eliminar <strong id="deleteStudentName" style="color:var(--ink)">—</strong>. Esta acção não pode ser revertida.
+                    O estudante <strong id="deleteStudentName" style="color:var(--ink)">—</strong> será movido para a lixeira e poderá ser restaurado mais tarde.
                 </p>
             </div>
 
@@ -767,56 +772,70 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── View modal ────────────────────────────────────────────
     const viewBtns = document.querySelectorAll('.view-btn');
-    const image = this.dataset.image;
 
-    const viewImage = document.getElementById('viewImage');
-    const viewNoImage = document.getElementById('viewNoImage');
 
-    if(image){
-        viewImage.src = image;
-        viewImage.style.display = 'block';
-        viewNoImage.style.display = 'none';
-    }else{
-        viewImage.style.display = 'none';
-        viewNoImage.style.display = 'flex';
-    }
     viewBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
-            document.getElementById('viewName').textContent    = this.dataset.name;
-            document.getElementById('viewEmail').textContent   = this.dataset.email;
-            document.getElementById('viewPhone').textContent   = this.dataset.phone;
-            document.getElementById('viewCreated').textContent = this.dataset.created;
-            document.getElementById('viewId').textContent      = 'ID #' + this.dataset.id;
-            document.getElementById('viewEditLink').href       = '/students/' + this.dataset.id + '/edit';
+    btn.addEventListener('click', function () {
 
-            new bootstrap.Modal(document.getElementById('viewStudentModal')).show();
+        const image = this.dataset.image;
+
+        document.getElementById('viewName').textContent = this.dataset.name;
+        document.getElementById('viewEmail').textContent = this.dataset.email;
+        document.getElementById('viewPhone').textContent = this.dataset.phone;
+        document.getElementById('viewCreated').textContent = this.dataset.created;
+        document.getElementById('viewId').textContent = 'ID #' + this.dataset.id;
+
+        const viewImage = document.getElementById('viewImage');
+        const viewNoImage = document.getElementById('viewNoImage');
+
+        if (image) {
+            viewImage.src = image;
+            viewImage.style.display = 'block';
+            viewNoImage.style.display = 'none';
+        } else {
+            viewImage.style.display = 'none';
+            viewNoImage.style.display = 'flex';
+        }
+
+        new bootstrap.Modal(
+            document.getElementById('viewStudentModal')
+        ).show();
         });
     });
 
     // ── Delete modal ──────────────────────────────────────────
-    const deleteBtns = document.querySelectorAll('.delete-btn');
-    const deleteForm = document.getElementById('deleteForm');
-    deleteBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
-            document.getElementById('deleteStudentName').textContent = this.dataset.name;
-            deleteForm.action = '/students/' + this.dataset.id;
-            new bootstrap.Modal(document.getElementById('deleteStudentModal')).show();
+
+    // 1. Instancia o modal apenas UMA vez na inicialização da página
+    const deleteModalElement = document.getElementById('deleteStudentModal');
+
+    // Só executa o código se o modal realmente existir na página atual
+    if (deleteModalElement) {
+        const deleteModal = new bootstrap.Modal(deleteModalElement);
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteStudentName = document.getElementById('deleteStudentName');
+
+        // 2. Captura todos os botões de eliminar da tabela
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault(); // Previne qualquer comportamento inesperado do botão
+
+                // Injeta os dados do data-attributes do botão clicado
+                deleteStudentName.textContent = this.dataset.name;
+                deleteForm.action = '/students/' + this.dataset.id;
+
+                // Abre o modal corretamente usando a instância criada
+                deleteModal.show();
+            });
         });
-    });
-
-    // ── Re-open create modal if validation failed ─────────────
-    @if ($errors->any() && old('_form') === 'create')
-        new bootstrap.Modal(document.getElementById('createStudentModal')).show();
-    @endif
-});
+    }
 
 
-// ── Edit modal ──────────────────────────
+    // ── Edit modal ──────────────────────────
 
-const editBtns = document.querySelectorAll('.edit-btn');
-const editForm = document.getElementById('editForm');
+    const editBtns = document.querySelectorAll('.edit-btn');
+    const editForm = document.getElementById('editForm');
 
-editBtns.forEach(btn => {
+    editBtns.forEach(btn => {
 
     btn.addEventListener('click', function () {
 
@@ -842,5 +861,10 @@ editBtns.forEach(btn => {
     });
 
 });
+
+});
+
+
+
 </script>
 @endsection
