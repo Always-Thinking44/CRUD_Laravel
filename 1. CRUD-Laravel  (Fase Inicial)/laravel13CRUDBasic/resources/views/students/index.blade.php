@@ -398,7 +398,7 @@
                                 data-name="{{ $student->name }}"
                                 data-email="{{ $student->email }}"
                                 data-phone="{{ $student->phone }}"
-                                data-created="{{ $student->created_at->format('d/m/Y H:i') }}">
+                                data-created="{{ $student->created_at->format('d/m/Y H:i') }}" data-image="{{ $student->image ? asset('storage/'.$student->image) : '' }}"></button>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
                             {{-- Edit --}}
@@ -551,13 +551,36 @@
                 </button>
             </div>
 
-            <div class="modal-body" style="padding-top:1rem;padding-bottom:0.5rem">
+            <div class="modal-body">
                 <div style="text-align:center;margin-bottom:1.25rem">
-                    <div class="view-avatar">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <img id="viewImage"
+                        src=""
+                        width="90"
+                        height="90"
+                        style="
+                            display:none;
+                            border-radius:50%;
+                            object-fit:cover;
+                            border:2px solid var(--border);
+                        ">
+
+                    <div id="viewNoImage" class="view-avatar">
+                        <svg viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
                     </div>
-                    <p style="margin-top:0.6rem;font-family:'Lora',serif;font-size:1.1rem;font-weight:600;color:var(--ink)" id="viewName">—</p>
-                    <span style="font-size:0.72rem;background:#f0ece5;color:var(--ink-muted);border-radius:20px;padding:2px 10px;font-weight:600" id="viewId">ID #—</span>
+
+                    <p style="margin-top:0.6rem;font-family:'Lora',serif;font-size:1.1rem;font-weight:600;color:var(--ink)"
+                    id="viewName">—</p>
+
+                    <span style="font-size:0.72rem;background:#f0ece5;color:var(--ink-muted);border-radius:20px;padding:2px 10px;font-weight:600"
+                        id="viewId">
+                        ID #—
+                    </span>
                 </div>
 
                 <div class="detail-row">
@@ -743,6 +766,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── View modal ────────────────────────────────────────────
     const viewBtns = document.querySelectorAll('.view-btn');
+    const image = this.dataset.image;
+
+    const viewImage = document.getElementById('viewImage');
+    const viewNoImage = document.getElementById('viewNoImage');
+
+    if(image){
+        viewImage.src = image;
+        viewImage.style.display = 'block';
+        viewNoImage.style.display = 'none';
+    }else{
+        viewImage.style.display = 'none';
+        viewNoImage.style.display = 'flex';
+    }
     viewBtns.forEach(btn => {
         btn.addEventListener('click', function () {
             document.getElementById('viewName').textContent    = this.dataset.name;
