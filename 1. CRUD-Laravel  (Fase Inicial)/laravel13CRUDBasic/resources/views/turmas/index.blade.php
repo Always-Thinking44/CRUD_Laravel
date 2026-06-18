@@ -358,7 +358,11 @@
 
                 <div class="modal-body">
                     <label>Nome</label>
-                    <input type="text" name="nome" class="form-control" placeholder="Ex: Turma A">
+                    <input type="text" name="nome"
+                            class="m-input @error('nome') is-invalid @enderror"
+                            placeholder="A1"
+                            value="{{ old('nome') }}">
+                        @error('nome')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
 
                 <div class="modal-footer">

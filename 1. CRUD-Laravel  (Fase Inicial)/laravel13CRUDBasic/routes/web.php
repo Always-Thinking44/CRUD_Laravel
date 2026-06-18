@@ -41,7 +41,6 @@ Route::put('/students/{student}', [StudentsController::class, 'update'])->name('
 
 Route::delete('/students/{student}', [StudentsController::class, 'destroy'])->name('students.destroy');
 
-// Sua rota resource padrão (mantenha-a como já está)
 Route::resource('students', StudentsController::class);
 
 

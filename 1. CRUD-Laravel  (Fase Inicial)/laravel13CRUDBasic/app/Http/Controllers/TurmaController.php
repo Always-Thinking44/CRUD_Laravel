@@ -17,7 +17,7 @@ class TurmaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nome' => 'required|string|max:255'
+            'nome' => 'required|string|max:255|unique:turmas,nome',
         ]);
 
         Turma::create([
@@ -32,7 +32,7 @@ class TurmaController extends Controller
     public function update(Request $request, Turma $turma)
     {
         $request->validate([
-            'nome' => 'required|string|max:255'
+            'nome' => 'required|string|max:255|unique:turmas,nome'
         ]);
 
         $turma->update([
