@@ -696,6 +696,13 @@
                 <div class="modal-body">
 
                     <div class="mb-3">
+                        <label class="m-label">Nova Foto</label>
+                        <input type="file"
+                               name="image"
+                               class="m-input" accept="image/*">
+                    </div>
+
+                    <div class="mb-3">
                         <label class="m-label">Nome</label>
                         <input type="text"
                                name="name"
@@ -733,13 +740,6 @@
                             @endforeach
 
                         </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="m-label">Nova Foto</label>
-                        <input type="file"
-                               name="image"
-                               class="m-input" accept="image/*">
                     </div>
 
 
