@@ -864,6 +864,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+@if ($errors->any() && old('_form') === 'create')
+        const createModal = new bootstrap.Modal(
+            document.getElementById('createStudentModal')
+        );
+
+        createModal.show();
+    @endif
 
 
 </script>
