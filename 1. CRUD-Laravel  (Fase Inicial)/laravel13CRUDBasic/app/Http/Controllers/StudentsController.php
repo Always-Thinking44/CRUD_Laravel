@@ -78,7 +78,7 @@ class StudentsController extends Controller
     ]);
 
     if ($request->hasFile('image')) {
-        // OPCIONAL (Boa prática): Deleta a imagem antiga do servidor para não acumular lixo
+        // Deleta a imagem antiga do servidor para não acumular lixo
         if ($student->image) {
             Storage::disk('public')->delete($student->image);
         }
@@ -102,7 +102,7 @@ class StudentsController extends Controller
     // 1. Para mostrar a página da lixeira
     public function trash() {
         $students = Student::onlyTrashed()->with('turma')->paginate(10);
-        $turmas = Turma::all(); // caso precise para modais
+        $turmas = Turma::all();
         return view('students.trash', compact('students', 'turmas'));
     }
 
