@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Painel Escolar')</title>
 
+    {{-- Bootstrap (usado nos seus modais) --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -15,6 +16,7 @@
 </head>
 <body style="margin:0; background:#f4f1ec;">
 
+    {{-- ── Barra de navegação ────────────────────────────────── --}}
     <nav style="background:#1e1b17; padding:0.75rem 1.5rem; display:flex; align-items:center; justify-content:space-between; font-family:'DM Sans', sans-serif;">
         <a href="{{ route('students.index') }}" style="color:#f4f1ec; font-weight:600; text-decoration:none; font-family:'Lora', serif; font-size:1.1rem;">
             Painel Escolar
@@ -40,6 +42,7 @@
         @endauth
     </nav>
 
+    {{-- ── Conteúdo da página ────────────────────────────────── --}}
     <main>
         @yield('content')
     </main>
