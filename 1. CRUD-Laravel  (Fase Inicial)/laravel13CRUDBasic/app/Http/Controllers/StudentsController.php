@@ -99,25 +99,32 @@ class StudentsController extends Controller
         return redirect()->route('students.index')->with('success', 'Student Deleted sucessfully');
     }
 
-    // 1. Para mostrar a página da lixeira
+
+
     public function trash() {
-        $students = Student::onlyTrashed()->with('turma')->paginate(10);
+        $students = Student::onlyTrashed()
+            ->where('user_id', auth()->id())
+            ->with('turma')
+            ->paginate(10);
         $turmas = Turma::all();
         return view('students.trash', compact('students', 'turmas'));
     }
 
-    // 2. Para restaurar o estudante
     public function restore($id) {
-        $student = Student::withTrashed()->findOrFail($id);
+        $student = Student::withTrashed()
+            ->where('user_id', auth()->id())
+            ->findOrFail($id);
         $student->restore();
         return redirect()->route('students.index')->with('success', 'Estudante restaurado com sucesso!');
     }
 
-    // 3. Para deletar permanentemente do banco de dados
     public function forceDelete($id) {
-        $student = Student::withTrashed()->findOrFail($id);
+        $student = Student::withTrashed()
+            ->where('user_id', auth()->id())
+            ->findOrFail($id);
         $student->forceDelete();
         return redirect()->route('students.trash')->with('success', 'Estudante excluído permanentemente.');
     }
+
 }
 
