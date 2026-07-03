@@ -27,7 +27,8 @@ class StudentsController extends Controller
         'email'=> 'required|email|unique:students,email',
         'phone'=> 'required|digits:9|unique:students,phone',
         'image'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'turma_id' => 'required|exists:turmas,id'
+        'turma_id' => ['required', Rule::exists('turmas', 'id')->where('user_id', auth()->id()) ],
+
     ]);
 
     if ($request->hasFile('image')) {
@@ -74,7 +75,9 @@ class StudentsController extends Controller
             Rule::unique('students', 'phone')->ignore($student->id)
         ],
         'image'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'turma_id' => 'required|exists:turmas,id'
+        'turma_id' => ['required',
+        Rule::exists('turmas', 'id')->where('user_id', auth()->id())]
+
     ]);
 
     if ($request->hasFile('image')) {
